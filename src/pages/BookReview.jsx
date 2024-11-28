@@ -4,10 +4,12 @@ import "../assets/css/BookReview.css";
 import { useParams } from "react-router-dom";
 import { useGetBookByIdQuery } from "../store/api/booksApi";
 import { Rating } from "@mui/material";
+import { useGetAllReviewsQuery } from "../store/api/reviewApi";
 
 function BookReview() {
   const { bookId } = useParams();
   const { data } = useGetBookByIdQuery(bookId);
+  const { data: bookreview } = useGetAllReviewsQuery(bookId);
 
   if (!data) {
     return <div>Loading...</div>;
@@ -46,28 +48,27 @@ function BookReview() {
                 </button>
               </div>
               <div className="bookReviews-review-con">
-                <div className="bookReviews-card">
-                  <div className="bookReviews-cards-top">
-                    <h1>Bawantha Pasqual</h1>
-                    <Rating
-                      name="book-rating"
-                      defaultValue={4.5}
-                      precision={0.5}
-                      size="small"
-                      sx={{
-                        "& .MuiRating-iconFilled": { color: "#B4D51E" },
-                      }}
-                      readOnly
-                    />
+                {bookreview?.payload?.map((review, index) => (
+                  <div className="bookReviews-card" key={index}>
+                    <div className="bookReviews-cards-top">
+                      <h1>{review.User.name || "Anonymous"}</h1>
+                      <Rating
+                        name={`book-rating-${index}`}
+                        value={review.ratings}
+                        precision={0.5}
+                        size="small"
+                        sx={{
+                          "& .MuiRating-iconFilled": { color: "#B4D51E" },
+                        }}
+                        readOnly
+                      />
+                    </div>
+                    <div>{review.commnet}</div>
                   </div>
-                  <div>
-                    dscj sdjh dscbkhskbdsc kdsjc jcshd dsccccccccccccsd
-                    cdssssssssssssssss sdcsc
-                  </div>
-                </div>
-                <div className="bookReviews-card"></div>
-                <div className="bookReviews-card"></div>
-                <div className="bookReviews-card"></div>
+                ))}
+                {bookreview?.payload?.length === 0 && (
+                  <div>No reviews available for this book.</div>
+                )}
               </div>
             </div>
           </div>
