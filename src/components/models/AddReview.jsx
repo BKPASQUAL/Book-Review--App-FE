@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -11,10 +11,21 @@ import {
 } from "@mui/material";
 import { useAddReviewMutation } from "../../store/api/bookReviewApi";
 
-function AddReview({ open, handleClose, bookId, onReviewAdded }) {
+function AddReview({ open, handleClose, bookId, reviewToEdit, onReviewAdded }) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [addReview, { isLoading }] = useAddReviewMutation();
+
+  // Populate state with existing review data for editing
+  useEffect(() => {
+    if (reviewToEdit) {
+      setRating(reviewToEdit.ratings || 0);
+      setComment(reviewToEdit.commnet || ""); // Handle typo in 'commnet'
+    } else {
+      setRating(0);
+      setComment("");
+    }
+  }, [reviewToEdit]);
 
   const handleSubmit = async () => {
     try {
@@ -28,11 +39,12 @@ function AddReview({ open, handleClose, bookId, onReviewAdded }) {
         userId: parseInt(userId, 10),
         bookId,
         ratings: rating,
-        commnet: comment,
+        commnet: comment, // Corrected 'commnet' for API compatibility
+        id: reviewToEdit?.id, // Include ID for updating if editing
       };
 
-      const response = await addReview(reviewData).unwrap(); 
-      console.log("Review added successfully:", response);
+      const response = await addReview(reviewData).unwrap();
+      console.log("Review added/updated successfully:", response);
 
       onReviewAdded(response);
 
@@ -40,13 +52,13 @@ function AddReview({ open, handleClose, bookId, onReviewAdded }) {
       setComment("");
       handleClose();
     } catch (error) {
-      console.error("Failed to add review:", error);
+      console.error("Failed to add/update review:", error);
     }
   };
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Add a Review</DialogTitle>
+      <DialogTitle>{reviewToEdit ? "Update Review" : "Add a Review"}</DialogTitle>
       <DialogContent>
         <Box display="flex" flexDirection="column" gap={2}>
           <Rating
@@ -55,6 +67,7 @@ function AddReview({ open, handleClose, bookId, onReviewAdded }) {
             onChange={(event, newValue) => setRating(newValue)}
             precision={0.5}
             size="large"
+            disabled={isLoading}
           />
           <TextField
             label="Comment"
@@ -77,7 +90,7 @@ function AddReview({ open, handleClose, bookId, onReviewAdded }) {
           variant="contained"
           disabled={isLoading || !rating || !comment}
         >
-          Submit
+          {reviewToEdit ? "Update" : "Submit"}
         </Button>
       </DialogActions>
     </Dialog>

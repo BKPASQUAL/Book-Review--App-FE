@@ -5,7 +5,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useGetBookByIdQuery } from "../store/api/booksApi";
 import { Rating } from "@mui/material";
 import { useGetAllReviewsQuery } from "../store/api/reviewApi";
-import { useGetSignedUserQuery } from "../store/api/userApi";
 import AddReview from "../components/models/AddReview";
 
 function BookReview() {
@@ -13,8 +12,9 @@ function BookReview() {
   const navigate = useNavigate();
   const { data } = useGetBookByIdQuery(bookId);
   const { data: bookreview } = useGetAllReviewsQuery(bookId);
-  const { data: signedUser } = useGetSignedUserQuery(); // Check user login status
+  const signedUserId = localStorage.getItem("userId");
   const [openAddReview, setOpenAddReview] = useState(false);
+  const [reviewToEdit, setReviewToEdit] = useState(null); // New state for the review being updated
 
   if (!data) {
     return <div>Loading...</div>;
@@ -22,16 +22,18 @@ function BookReview() {
 
   const { imageURL, autherName, bookDiscription, bookTitle } = data.payload;
 
-  const handleAddReview = (reviewData) => {
-    console.log("New Review:", reviewData);
+  const handleRateButtonClick = () => {
+    if (!signedUserId) {
+      navigate("/login");
+    } else {
+      setReviewToEdit(null); // Clear review to edit for adding a new review
+      setOpenAddReview(true);
+    }
   };
 
-  const handleRateButtonClick = () => {
-    if (!signedUser?.payload?.name) {
-      navigate("/login"); // Redirect to login page if not logged in
-    } else {
-      setOpenAddReview(true); // Open modal if logged in
-    }
+  const handleUpdateClick = (review) => {
+    setReviewToEdit(review); // Set the review to edit
+    setOpenAddReview(true); // Open the modal
   };
 
   return (
@@ -65,24 +67,58 @@ function BookReview() {
                 </button>
               </div>
               <div className="bookReviews-review-con">
-                {bookreview?.payload?.map((review, index) => (
-                  <div className="bookReviews-card" key={index}>
-                    <div className="bookReviews-cards-top">
-                      <h1>{review.User.name || "Anonymous"}</h1>
-                      <Rating
-                        name={`book-rating-${index}`}
-                        value={review.ratings}
-                        precision={0.5}
-                        size="small"
-                        sx={{
-                          "& .MuiRating-iconFilled": { color: "#B4D51E" },
-                        }}
-                        readOnly
-                      />
+                {bookreview?.payload?.map((review, index) => {
+                  const isCurrentUserReview =
+                    review.userId === Number(signedUserId);
+                  return (
+                    <div
+                      className="bookReviews-card"
+                      key={index}
+                      style={{
+                        backgroundColor: isCurrentUserReview
+                          ? "#def7e43a"
+                          : "white",
+                      }}
+                    >
+                      <div className="bookReviews-cards-top">
+                        <h1>{review.User.name || "Anonymous"}</h1>
+                        <Rating
+                          name={`book-rating-${index}`}
+                          value={review.ratings}
+                          precision={0.5}
+                          size="small"
+                          sx={{
+                            "& .MuiRating-iconFilled": { color: "#B4D51E" },
+                          }}
+                          readOnly
+                        />
+                      </div>
+                      <div className="bookReviews-card-comment">
+                        {review.commnet}
+                      </div>
+                      {isCurrentUserReview && (
+                        <div className="bookReviews-card-actions">
+                          <button
+                            className="update-button"
+                            onClick={() => handleUpdateClick(review)}
+                          >
+                            <span className="material-symbols-outlined">
+                              edit
+                            </span>
+                            Update
+                          </button>
+                          <button className="delete-button">
+                            <span className="material-symbols-outlined">
+                              delete
+                            </span>
+                            Delete
+                          </button>
+                        </div>
+                      )}
                     </div>
-                    <div className="bookReviews-card-comment">{review.commnet}</div>
-                  </div>
-                ))}
+                  );
+                })}
+
                 {bookreview?.payload?.length === 0 && (
                   <div>No reviews available for this book.</div>
                 )}
@@ -96,9 +132,9 @@ function BookReview() {
         open={openAddReview}
         handleClose={() => setOpenAddReview(false)}
         bookId={bookId}
+        reviewToEdit={reviewToEdit} // Pass the review to edit
         onReviewAdded={(newReview) => {
           console.log("New review added:", newReview);
-          // Optionally refresh the reviews or update state here
         }}
       />
     </div>
