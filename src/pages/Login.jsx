@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2"; // Import Swal
+import Swal from "sweetalert2"; 
 import { useLoginUserMutation } from "../store/api/authApi";
 
 function Login() {
@@ -14,16 +14,14 @@ function Login() {
 
   const handleLogin = async (data) => {
     try {
-      const response = await loginUser(data); // Pass the form data directly
+      const response = await loginUser(data); 
       console.log("loginUser", response);
       if (response.data && !response.data.error) {
-        const { accessToken, roleId } = response.data.payload;
+        const { accessToken, roleId , userId } = response.data.payload;
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("roleId", roleId);
-
+        localStorage.setItem("userId", userId );
         navigate("/");
-
-        // Success toast
         Swal.fire({
           icon: "success",
           title: "Welcome to the Book Review!",
