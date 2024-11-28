@@ -3,6 +3,7 @@ import api from "./api/api";
 import { booksApi } from "./api/booksApi";
 import {userApi } from "./api/userApi";
 import { getReviewApi } from "./api/reviewApi";
+import { bookReviewApi } from "./api/bookReviewApi";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     [booksApi.reducerPath]: booksApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [getReviewApi.reducerPath]: getReviewApi.reducer,
+    [bookReviewApi.reducerPath]: bookReviewApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -17,5 +19,6 @@ export const store = configureStore({
       booksApi.middleware,
       userApi.middleware,
       getReviewApi.middleware,
+      bookReviewApi.middleware,
     ),
 });

@@ -110,7 +110,8 @@
 
 
 .bookReviews-card {
-    height: 120px;
+    min-height: 120px;
+    height: auto;
     border: 1px solid black;
     border-radius: 25px;
     margin-bottom: 20px;
@@ -126,4 +127,13 @@
 
 .bookReviews-cards-top h1 {
     font-size: 20px;
+}
+
+.bookReviews-card-comment {
+  width: 100%;
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
+  white-space: pre-wrap; 
+  line-height: 1.5; 
+  margin-top: 10px; 
 }

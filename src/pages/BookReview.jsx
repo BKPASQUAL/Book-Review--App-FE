@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import NavBar from "../components/common/NavBar";
 import "../assets/css/BookReview.css";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useGetBookByIdQuery } from "../store/api/booksApi";
 import { Rating } from "@mui/material";
 import { useGetAllReviewsQuery } from "../store/api/reviewApi";
-import AddReview from "../components/models/AddReview"; // Import the modal component
+import { useGetSignedUserQuery } from "../store/api/userApi";
+import AddReview from "../components/models/AddReview";
 
 function BookReview() {
   const { bookId } = useParams();
+  const navigate = useNavigate();
   const { data } = useGetBookByIdQuery(bookId);
   const { data: bookreview } = useGetAllReviewsQuery(bookId);
+  const { data: signedUser } = useGetSignedUserQuery(); // Check user login status
   const [openAddReview, setOpenAddReview] = useState(false);
 
   if (!data) {
@@ -21,7 +24,14 @@ function BookReview() {
 
   const handleAddReview = (reviewData) => {
     console.log("New Review:", reviewData);
-    // Handle the review submission logic here (e.g., call an API to save the review)
+  };
+
+  const handleRateButtonClick = () => {
+    if (!signedUser?.payload?.name) {
+      navigate("/login"); // Redirect to login page if not logged in
+    } else {
+      setOpenAddReview(true); // Open modal if logged in
+    }
   };
 
   return (
@@ -50,10 +60,7 @@ function BookReview() {
             <div className="bookReviews-review">
               <div className="bookReviews-review-title">
                 <h1>Review</h1>
-                <button
-                  className="rate-button"
-                  onClick={() => setOpenAddReview(true)}
-                >
+                <button className="rate-button" onClick={handleRateButtonClick}>
                   <span className="material-symbols-outlined">star</span> Rate
                 </button>
               </div>
@@ -73,7 +80,7 @@ function BookReview() {
                         readOnly
                       />
                     </div>
-                    <div>{review.commnet}</div>
+                    <div className="bookReviews-card-comment">{review.commnet}</div>
                   </div>
                 ))}
                 {bookreview?.payload?.length === 0 && (
@@ -85,11 +92,14 @@ function BookReview() {
         </div>
       </div>
 
-      {/* AddReview Modal */}
       <AddReview
         open={openAddReview}
         handleClose={() => setOpenAddReview(false)}
-        onSubmit={handleAddReview}
+        bookId={bookId}
+        onReviewAdded={(newReview) => {
+          console.log("New review added:", newReview);
+          // Optionally refresh the reviews or update state here
+        }}
       />
     </div>
   );
