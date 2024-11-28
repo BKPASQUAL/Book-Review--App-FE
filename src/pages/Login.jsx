@@ -14,13 +14,14 @@ function Login() {
 
   const handleLogin = async (data) => {
     try {
-      const response = await loginUser(data); 
-      console.log("loginUser", response);
-      if (response.data && !response.data.error) {
-        const { accessToken, roleId , userId } = response.data.payload;
+      const response = await loginUser(data);
+      console.log("loginUser Response:", response);
+  
+      if (response?.data?.payload) {
+        const { accessToken, roleId, userId } = response.data.payload;
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("roleId", roleId);
-        localStorage.setItem("userId", userId );
+        localStorage.setItem("userId", userId);
         navigate("/");
         Swal.fire({
           icon: "success",
@@ -31,15 +32,16 @@ function Login() {
           timer: 3000,
         });
       } else {
-        console.error("Login Error", response);
+        const errorMessage =
+          response?.error?.data?.message || "Login failed!";
         Swal.fire({
           title: "Oops...",
-          text: response?.error?.data?.payload || "Login failed!",
+          text: errorMessage,
           icon: "error",
         });
       }
     } catch (error) {
-      console.error("Login Error", error);
+      console.error("Login Error:", error);
       Swal.fire({
         title: "Oops...",
         text: "Something went wrong. Please try again.",
@@ -47,6 +49,7 @@ function Login() {
       });
     }
   };
+  
 
   return (
     <div className="Login-main">
