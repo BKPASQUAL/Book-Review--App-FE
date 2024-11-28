@@ -9,11 +9,21 @@ export const bookReviewApi = api.injectEndpoints({
         body: data,
       }),
     }),
-
     getReviewById: builder.query({
-      query: (bookId, userId) => `ratings/${bookId}/${userId}`,
+      query: ({ bookId, userId }) => `ratings/${bookId}/${userId}`,
+    }),
+    editReview: builder.mutation({
+      query: ({ bookId, userId, inputData }) => ({
+        url: `ratings/${bookId}/${userId}`,
+        method: "PUT",
+        body: inputData,
+      }),
     }),
   }),
 });
 
-export const { useAddReviewMutation, useGetReviewByIdQuery } = bookReviewApi;
+export const {
+  useAddReviewMutation,
+  useGetReviewByIdQuery,
+  useEditReviewMutation,
+} = bookReviewApi;

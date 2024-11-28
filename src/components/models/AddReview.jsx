@@ -9,18 +9,22 @@ import {
   Rating,
   Box,
 } from "@mui/material";
-import { useAddReviewMutation } from "../../store/api/bookReviewApi";
+import {
+  useAddReviewMutation,
+  useEditReviewMutation,
+} from "../../store/api/bookReviewApi";
 
 function AddReview({ open, handleClose, bookId, reviewToEdit, onReviewAdded }) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-  const [addReview, { isLoading }] = useAddReviewMutation();
+  const [addReview, { isLoading: isAdding }] = useAddReviewMutation();
+  const [editReview, { isLoading: isEditing }] = useEditReviewMutation();
 
-  // Populate state with existing review data for editing
+  // Populate state with reviewToEdit data if editing
   useEffect(() => {
     if (reviewToEdit) {
       setRating(reviewToEdit.ratings || 0);
-      setComment(reviewToEdit.commnet || ""); // Handle typo in 'commnet'
+      setComment(reviewToEdit.comment || ""); // Fixed 'commnet' typo
     } else {
       setRating(0);
       setComment("");
@@ -39,15 +43,27 @@ function AddReview({ open, handleClose, bookId, reviewToEdit, onReviewAdded }) {
         userId: parseInt(userId, 10),
         bookId,
         ratings: rating,
-        commnet: comment, // Corrected 'commnet' for API compatibility
-        id: reviewToEdit?.id, // Include ID for updating if editing
+        comment, // Ensure proper field name
       };
 
-      const response = await addReview(reviewData).unwrap();
-      console.log("Review added/updated successfully:", response);
+      let response;
 
+      if (reviewToEdit) {
+        // Update existing review
+        response = await editReview({
+          bookId,
+          userId: reviewToEdit.userId, // Use existing userId from the review being edited
+          inputData: reviewData,
+        }).unwrap();
+        console.log("Review updated successfully:", response);
+      } else {
+        // Add a new review
+        response = await addReview(reviewData).unwrap();
+        console.log("Review added successfully:", response);
+      }
+
+      // Notify parent component and close dialog
       onReviewAdded(response);
-
       setRating(0);
       setComment("");
       handleClose();
@@ -67,7 +83,7 @@ function AddReview({ open, handleClose, bookId, reviewToEdit, onReviewAdded }) {
             onChange={(event, newValue) => setRating(newValue)}
             precision={0.5}
             size="large"
-            disabled={isLoading}
+            disabled={isAdding || isEditing}
           />
           <TextField
             label="Comment"
@@ -76,19 +92,19 @@ function AddReview({ open, handleClose, bookId, reviewToEdit, onReviewAdded }) {
             multiline
             rows={4}
             variant="outlined"
-            disabled={isLoading}
+            disabled={isAdding || isEditing}
           />
         </Box>
       </DialogContent>
       <DialogActions style={{ marginRight: "20px", marginBottom: "20px" }}>
-        <Button onClick={handleClose} color="secondary" disabled={isLoading}>
+        <Button onClick={handleClose} color="secondary" disabled={isAdding || isEditing}>
           Cancel
         </Button>
         <Button
           onClick={handleSubmit}
           color="primary"
           variant="contained"
-          disabled={isLoading || !rating || !comment}
+          disabled={isAdding || isEditing || !rating || !comment}
         >
           {reviewToEdit ? "Update" : "Submit"}
         </Button>

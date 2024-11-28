@@ -14,7 +14,7 @@ function BookReview() {
   const { data: bookreview } = useGetAllReviewsQuery(bookId);
   const signedUserId = localStorage.getItem("userId");
   const [openAddReview, setOpenAddReview] = useState(false);
-  const [reviewToEdit, setReviewToEdit] = useState(null); // New state for the review being updated
+  const [reviewToEdit, setReviewToEdit] = useState(null);
 
   if (!data) {
     return <div>Loading...</div>;
@@ -22,18 +22,22 @@ function BookReview() {
 
   const { imageURL, autherName, bookDiscription, bookTitle } = data.payload;
 
+  const hasUserReviewed = bookreview?.payload?.some(
+    (review) => review.userId === Number(signedUserId)
+  );
+
   const handleRateButtonClick = () => {
     if (!signedUserId) {
       navigate("/login");
     } else {
-      setReviewToEdit(null); // Clear review to edit for adding a new review
+      setReviewToEdit(null);
       setOpenAddReview(true);
     }
   };
 
   const handleUpdateClick = (review) => {
-    setReviewToEdit(review); // Set the review to edit
-    setOpenAddReview(true); // Open the modal
+    setReviewToEdit(review);
+    setOpenAddReview(true);
   };
 
   return (
@@ -62,7 +66,16 @@ function BookReview() {
             <div className="bookReviews-review">
               <div className="bookReviews-review-title">
                 <h1>Review</h1>
-                <button className="rate-button" onClick={handleRateButtonClick}>
+                <button
+                  className="rate-button"
+                  onClick={handleRateButtonClick}
+                  disabled={hasUserReviewed}
+                  title={
+                    hasUserReviewed
+                      ? "You have already reviewed this book."
+                      : "Rate this book"
+                  }
+                >
                   <span className="material-symbols-outlined">star</span> Rate
                 </button>
               </div>
@@ -94,7 +107,7 @@ function BookReview() {
                         />
                       </div>
                       <div className="bookReviews-card-comment">
-                        {review.commnet}
+                        {review.comment}
                       </div>
                       {isCurrentUserReview && (
                         <div className="bookReviews-card-actions">
@@ -132,7 +145,7 @@ function BookReview() {
         open={openAddReview}
         handleClose={() => setOpenAddReview(false)}
         bookId={bookId}
-        reviewToEdit={reviewToEdit} // Pass the review to edit
+        reviewToEdit={reviewToEdit}
         onReviewAdded={(newReview) => {
           console.log("New review added:", newReview);
         }}
