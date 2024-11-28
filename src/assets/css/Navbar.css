@@ -1,0 +1,51 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    width: 100%;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+    width: 33%;
+}
+
+.navbar-left h1 {
+    font-size: 25px;
+}
+
+.navbar-left h2 {
+    font-size: 25px;
+    color: #B4D51E;
+
+}
+
+.navbar-mid {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    width: 33%;
+    gap: 20px;
+}
+
+.navbar-mid p {
+    color: #463C74;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; 
+    width: 33%;
+}
+
+.navbar-right h1 {
+    font-size: 25px;
+}

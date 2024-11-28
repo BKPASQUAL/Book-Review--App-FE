@@ -1,0 +1,53 @@
+.landingPage-main {
+    margin: 2% 5%;
+}
+
+.landingPage-con {
+    margin-top: 2%;
+    background-image: url(../images/image.png); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 80vh;
+    border-radius: 50px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    color: #4A4A4A; 
+}
+
+.landingPage-text {
+    margin-left: 8%;
+}
+
+.landingPage-con h1 {
+    font-size: 3.5rem;
+    line-height: 1; 
+    font-weight: bold;
+    color: #4a3f7a; 
+}
+
+.landingPage-con p {
+    font-size: 1.2rem;
+    margin: 1rem 0;
+    color: #737373; 
+    line-height: 1.6;
+}
+
+.landingPage-con button {
+    background-color: #A3CE4A; 
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.landingPage-con button:hover {
+    background-color: #8EBE42; 
+}
