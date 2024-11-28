@@ -88,7 +88,6 @@
     margin-top: 20px;
     max-height: 620px; 
     overflow-y: auto; 
-    padding-right: 10px; 
   }
 
   .bookReviews-review-con::-webkit-scrollbar {
@@ -157,6 +156,7 @@
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
+  margin-top: 5px;
 }
 
 .update-button {

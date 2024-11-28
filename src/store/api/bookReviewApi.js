@@ -19,6 +19,12 @@ export const bookReviewApi = api.injectEndpoints({
         body: inputData,
       }),
     }),
+    deleteReview: builder.mutation({
+      query: ({ bookId, userId }) => ({
+        url: `ratings/${bookId}/${userId}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -26,4 +32,5 @@ export const {
   useAddReviewMutation,
   useGetReviewByIdQuery,
   useEditReviewMutation,
+  useDeleteReviewMutation, 
 } = bookReviewApi;

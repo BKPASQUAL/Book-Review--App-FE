@@ -6,12 +6,15 @@ import { useGetBookByIdQuery } from "../store/api/booksApi";
 import { Rating } from "@mui/material";
 import { useGetAllReviewsQuery } from "../store/api/reviewApi";
 import AddReview from "../components/models/AddReview";
+import { useDeleteReviewMutation } from "../store/api/bookReviewApi";
+import Swal from "sweetalert2";
 
 function BookReview() {
   const { bookId } = useParams();
   const navigate = useNavigate();
   const { data } = useGetBookByIdQuery(bookId);
-  const { data: bookreview } = useGetAllReviewsQuery(bookId);
+  const { data: bookreview , refetch } = useGetAllReviewsQuery(bookId);
+  const [deleteReview] = useDeleteReviewMutation(); // Hook for deleting a review
   const signedUserId = localStorage.getItem("userId");
   const [openAddReview, setOpenAddReview] = useState(false);
   const [reviewToEdit, setReviewToEdit] = useState(null);
@@ -38,6 +41,36 @@ function BookReview() {
   const handleUpdateClick = (review) => {
     setReviewToEdit(review);
     setOpenAddReview(true);
+  };
+  const handleDeleteClick = async (review) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteReview({ bookId, userId: review.userId }).unwrap();
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your review has been deleted.",
+            icon: "success",
+          });
+          refetch();
+        } catch (error) {
+          console.error("Failed to delete review:", error);
+          Swal.fire({
+            title: "Error!",
+            text: "An error occurred while deleting the review.",
+            icon: "error",
+          });
+        }
+      }
+    });
   };
 
   return (
@@ -120,7 +153,10 @@ function BookReview() {
                             </span>
                             Update
                           </button>
-                          <button className="delete-button">
+                          <button
+                            className="delete-button"
+                            onClick={() => handleDeleteClick(review)}
+                          >
                             <span className="material-symbols-outlined">
                               delete
                             </span>

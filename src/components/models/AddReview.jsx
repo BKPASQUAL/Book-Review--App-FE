@@ -13,18 +13,20 @@ import {
   useAddReviewMutation,
   useEditReviewMutation,
 } from "../../store/api/bookReviewApi";
+import { useGetAllReviewsQuery } from "../../store/api/reviewApi";
 
 function AddReview({ open, handleClose, bookId, reviewToEdit, onReviewAdded }) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [addReview, { isLoading: isAdding }] = useAddReviewMutation();
   const [editReview, { isLoading: isEditing }] = useEditReviewMutation();
+  const {  refetch } = useGetAllReviewsQuery(bookId);
 
-  // Populate state with reviewToEdit data if editing
+
   useEffect(() => {
     if (reviewToEdit) {
       setRating(reviewToEdit.ratings || 0);
-      setComment(reviewToEdit.comment || ""); // Fixed 'commnet' typo
+      setComment(reviewToEdit.comment || ""); 
     } else {
       setRating(0);
       setComment("");
@@ -38,32 +40,32 @@ function AddReview({ open, handleClose, bookId, reviewToEdit, onReviewAdded }) {
         console.error("User ID not found in local storage");
         return;
       }
-
+  
       const reviewData = {
         userId: parseInt(userId, 10),
         bookId,
         ratings: rating,
-        comment, // Ensure proper field name
+        comment, 
       };
-
+  
       let response;
-
+  
       if (reviewToEdit) {
-        // Update existing review
         response = await editReview({
           bookId,
-          userId: reviewToEdit.userId, // Use existing userId from the review being edited
+          userId: reviewToEdit.userId, 
           inputData: reviewData,
         }).unwrap();
         console.log("Review updated successfully:", response);
       } else {
-        // Add a new review
         response = await addReview(reviewData).unwrap();
         console.log("Review added successfully:", response);
       }
-
-      // Notify parent component and close dialog
+  
+      await refetch();
+  
       onReviewAdded(response);
+  
       setRating(0);
       setComment("");
       handleClose();
@@ -71,6 +73,7 @@ function AddReview({ open, handleClose, bookId, reviewToEdit, onReviewAdded }) {
       console.error("Failed to add/update review:", error);
     }
   };
+  
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
