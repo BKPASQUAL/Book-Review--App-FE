@@ -29,7 +29,7 @@
 }
 
 .bookReview-right-top {
-  height: 10vh;
+  height: 8vh;
   /* align-content: center; */
   font-size: 25px;
   font-weight: 600;
@@ -47,6 +47,33 @@
 .bookReviews-review {
 }
 
+.rate-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 15px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #ffffff;
+  margin-right: 20px;
+}
+
+.rate-button .material-symbols-outlined {
+  font-size: 18px;
+  color: #000;
+}
+
+.rate-button:hover {
+  background: #f0f0f0;
+  color: #333;
+  border-color: #333;
+}
+
 .bookReviews-review-title {
   width: 100%;
   height: 50px;
@@ -55,4 +82,48 @@
   background: #77f0772d;
   align-items: center;
   padding-left: 1%;
+}
+
+.bookReviews-review-con {
+    margin-top: 20px;
+    max-height: 620px; 
+    overflow-y: auto; 
+    padding-right: 10px; 
+  }
+
+  .bookReviews-review-con::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .bookReviews-review-con::-webkit-scrollbar-thumb {
+    background: #ccc; 
+    border-radius: 4px;
+  }
+  
+  .bookReviews-review-con::-webkit-scrollbar-thumb:hover {
+    background: #999; 
+  }
+  
+  .bookReviews-review-con::-webkit-scrollbar-track {
+    background: #f0f0f0; 
+  }
+
+
+.bookReviews-card {
+    height: 120px;
+    border: 1px solid black;
+    border-radius: 25px;
+    margin-bottom: 20px;
+    padding: 20px 30px ;
+}
+
+.bookReviews-cards-top {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.bookReviews-cards-top h1 {
+    font-size: 20px;
 }

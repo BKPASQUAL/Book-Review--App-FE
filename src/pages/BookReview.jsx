@@ -3,6 +3,7 @@ import NavBar from "../components/common/NavBar";
 import "../assets/css/BookReview.css";
 import { useParams } from "react-router-dom";
 import { useGetBookByIdQuery } from "../store/api/booksApi";
+import { Rating } from "@mui/material";
 
 function BookReview() {
   const { bookId } = useParams();
@@ -40,9 +41,34 @@ function BookReview() {
             <div className="bookReviews-review">
               <div className="bookReviews-review-title">
                 <h1>Review</h1>
-                <button>Rate</button>
+                <button className="rate-button">
+                  <span className="material-symbols-outlined">star</span> Rate
+                </button>
               </div>
-              <div className="bookReviews-review-con"></div>
+              <div className="bookReviews-review-con">
+                <div className="bookReviews-card">
+                  <div className="bookReviews-cards-top">
+                    <h1>Bawantha Pasqual</h1>
+                    <Rating
+                      name="book-rating"
+                      defaultValue={4.5}
+                      precision={0.5}
+                      size="small"
+                      sx={{
+                        "& .MuiRating-iconFilled": { color: "#B4D51E" },
+                      }}
+                      readOnly
+                    />
+                  </div>
+                  <div>
+                    dscj sdjh dscbkhskbdsc kdsjc jcshd dsccccccccccccsd
+                    cdssssssssssssssss sdcsc
+                  </div>
+                </div>
+                <div className="bookReviews-card"></div>
+                <div className="bookReviews-card"></div>
+                <div className="bookReviews-card"></div>
+              </div>
             </div>
           </div>
         </div>
