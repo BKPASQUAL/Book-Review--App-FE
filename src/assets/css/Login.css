@@ -1,0 +1,55 @@
+.Login-main {
+  background: #eaf5ea;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Login-top-title{
+    display: flex;
+    justify-content: center; 
+    margin-bottom: 20px;
+}
+
+.Login-top-title h1 {
+  font-size: 35px;
+}
+
+.Login-top-title h2 {
+  font-size: 35px;
+  color: #b4d51e;
+}
+
+.Login-top-title-title {
+    display: flex;
+    justify-content: center; 
+    font-size: 30px;
+    font-weight: 700;
+    color: #463c74;
+    margin-bottom: 20px;
+}
+
+.Login-con {
+  height: 50vh;
+  background: #ffffff;
+  width: 20%;
+  padding: 2% 3%;
+  border-radius: 15px;
+}
+
+.Login-mid {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.Login-btm {
+    display: flex;
+    justify-content: center; 
+}
+
+.Login-btm a {
+    color: #593cd8;
+}
