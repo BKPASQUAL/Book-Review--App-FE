@@ -23,8 +23,8 @@ function NavBar() {
         <p>Blogs</p>
       </div>
       <div className='navbar-right'>
-        {signedUser?.payload?.name ? (
-          <h1> {signedUser.payload.name}</h1>
+        {signedUser?.payload?.username ? (
+          <h1> {signedUser.payload.username}</h1>
         ) : (
           <h1 onClick={handleSignInClick} style={{ cursor: 'pointer' }}>
             Sign In

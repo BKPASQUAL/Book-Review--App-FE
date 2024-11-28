@@ -13,7 +13,7 @@ function BookReview() {
   const { bookId } = useParams();
   const navigate = useNavigate();
   const { data } = useGetBookByIdQuery(bookId);
-  const { data: bookreview , refetch } = useGetAllReviewsQuery(bookId);
+  const { data: bookreview, refetch } = useGetAllReviewsQuery(bookId);
   const [deleteReview] = useDeleteReviewMutation(); // Hook for deleting a review
   const signedUserId = localStorage.getItem("userId");
   const [openAddReview, setOpenAddReview] = useState(false);
@@ -116,6 +116,10 @@ function BookReview() {
                 {bookreview?.payload?.map((review, index) => {
                   const isCurrentUserReview =
                     review.userId === Number(signedUserId);
+                  const reviewerName = `${
+                    review.User.firstName || "Anonymous"
+                  } ${review.User.lastName || ""}`.trim();
+
                   return (
                     <div
                       className="bookReviews-card"
@@ -127,7 +131,7 @@ function BookReview() {
                       }}
                     >
                       <div className="bookReviews-cards-top">
-                        <h1>{review.User.name || "Anonymous"}</h1>
+                        <h1>{reviewerName || "Anonymous"}</h1>
                         <Rating
                           name={`book-rating-${index}`}
                           value={review.ratings}

@@ -87,7 +87,7 @@ function Login() {
         </form>
 
         <div className="Login-btm">
-          Don't have an account? <a href="/register">Create an account</a>
+          Don't have an account? <a href="/Singup">Create an account</a>
         </div>
       </div>
     </div>
