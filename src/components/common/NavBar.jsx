@@ -14,7 +14,7 @@ function NavBar() {
         <p>Blogs</p>
       </div>
       <div className='navbar-right'>
-        <h1>Guest</h1>
+        <h1>Sing In</h1>
       </div>
     </div>
   )

@@ -2,10 +2,15 @@ import React from "react";
 import "../../assets/css/LatestBooks.css";
 import { useGetAllBooksQuery } from "../../store/api/booksApi";
 import Rating from "@mui/material/Rating";
+import { useNavigate } from "react-router-dom";
 
 function LatestBooks() {
   const { data } = useGetAllBooksQuery();
-  console.log(data?.payload);
+  const navigate = useNavigate();
+
+  const handleCardClick = (bookId) => {
+    navigate(`/bookReview/${bookId}`); // Pass bookId in the route
+  };
 
   return (
     <div className="LatestBooks-main">
@@ -15,8 +20,12 @@ function LatestBooks() {
       </div>
       <div className="LatestBooks-grid">
         {data?.payload && data.payload.length > 0 ? (
-          data.payload.map((book, index) => (
-            <div key={book.id} className="LatestBooks-card">
+          data.payload.map((book) => (
+            <div
+              key={book.id}
+              className="LatestBooks-card"
+              onClick={() => handleCardClick(book.id)} // Pass correct book.id
+            >
               <div className="LatestBooks-card-top">
                 <img src={book.imageURL || bookImg} alt="bookimg" />
               </div>
@@ -34,9 +43,7 @@ function LatestBooks() {
                 />
                 <p>{book.bookDiscription}</p>
                 <div className="LatestBooks-card-footer">
-                  <p>
-                    {book.autherName} 
-                  </p>
+                  <p>{book.autherName}</p>
                 </div>
               </div>
             </div>
