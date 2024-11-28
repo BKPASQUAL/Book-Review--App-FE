@@ -9,7 +9,7 @@ function LatestBooks() {
   const navigate = useNavigate();
 
   const handleCardClick = (bookId) => {
-    navigate(`/bookReview/${bookId}`); // Pass bookId in the route
+    navigate(`/bookReview/${bookId}`);
   };
 
   return (
@@ -24,7 +24,7 @@ function LatestBooks() {
             <div
               key={book.id}
               className="LatestBooks-card"
-              onClick={() => handleCardClick(book.id)} // Pass correct book.id
+              onClick={() => handleCardClick(book.id)} 
             >
               <div className="LatestBooks-card-top">
                 <img src={book.imageURL || bookImg} alt="bookimg" />

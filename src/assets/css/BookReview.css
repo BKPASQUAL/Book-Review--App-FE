@@ -141,7 +141,7 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .update-button, .delete-button {
@@ -160,7 +160,7 @@
 }
 
 .update-button {
-  background: #4caf50; /* Green */
+  background: #4caf50; 
 }
 
 .update-button:hover {
@@ -168,7 +168,7 @@
 }
 
 .delete-button {
-  background: #f44336; /* Red */
+  background: #f44336; 
 }
 
 .delete-button:hover {

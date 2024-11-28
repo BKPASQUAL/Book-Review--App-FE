@@ -3,8 +3,8 @@ import NavBar from "../components/common/NavBar";
 import "../assets/css/BookReview.css";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGetBookByIdQuery } from "../store/api/booksApi";
+import { useGetAllReviewsQuery, useGetAverageRatingQuery } from "../store/api/reviewApi";
 import { Rating } from "@mui/material";
-import { useGetAllReviewsQuery } from "../store/api/reviewApi";
 import AddReview from "../components/models/AddReview";
 import { useDeleteReviewMutation } from "../store/api/bookReviewApi";
 import Swal from "sweetalert2";
@@ -14,7 +14,9 @@ function BookReview() {
   const navigate = useNavigate();
   const { data } = useGetBookByIdQuery(bookId);
   const { data: bookreview, refetch } = useGetAllReviewsQuery(bookId);
-  const [deleteReview] = useDeleteReviewMutation(); // Hook for deleting a review
+  const { data: averageRatingData } = useGetAverageRatingQuery(bookId);
+  console.log(averageRatingData)
+  const [deleteReview] = useDeleteReviewMutation();
   const signedUserId = localStorage.getItem("userId");
   const [openAddReview, setOpenAddReview] = useState(false);
   const [reviewToEdit, setReviewToEdit] = useState(null);
@@ -42,6 +44,7 @@ function BookReview() {
     setReviewToEdit(review);
     setOpenAddReview(true);
   };
+
   const handleDeleteClick = async (review) => {
     Swal.fire({
       title: "Are you sure?",
@@ -73,6 +76,8 @@ function BookReview() {
     });
   };
 
+  const averageRating = averageRatingData?.payload ?? "No ratings yet";
+
   return (
     <div className="bookReview-main">
       <NavBar />
@@ -89,6 +94,17 @@ function BookReview() {
               <strong>Description:</strong> <br />
               {bookDiscription}
             </p>
+      
+            {averageRating !== "No ratings yet" && (
+              <Rating
+                name="average-rating"
+                value={Number(averageRating)}
+                precision={0.5}
+                readOnly
+                sx={{ "& .MuiRating-iconFilled": { color: "#B4D51E" } }}
+                style={{marginTop:'10px'}}
+              />
+            )}
           </div>
         </div>
         <div className="bookReview-right">

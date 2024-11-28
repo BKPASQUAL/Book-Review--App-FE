@@ -5,10 +5,12 @@ export const getReviewApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:4003/' }),
   endpoints: (builder) => ({
     getAllReviews: builder.query({
-      query: (id) => `ratings/${id}`,
+      query: (id) => `ratings/${id}`, 
     }),
-   
+    getAverageRating: builder.query({
+      query: (bookId) => `ratings/avgrating/${bookId}`, 
+    }),
   }),
 });
 
-export const { useGetAllReviewsQuery } = getReviewApi;
+export const { useGetAllReviewsQuery, useGetAverageRatingQuery } = getReviewApi;
