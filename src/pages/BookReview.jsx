@@ -1,21 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import NavBar from "../components/common/NavBar";
 import "../assets/css/BookReview.css";
 import { useParams } from "react-router-dom";
 import { useGetBookByIdQuery } from "../store/api/booksApi";
 import { Rating } from "@mui/material";
 import { useGetAllReviewsQuery } from "../store/api/reviewApi";
+import AddReview from "../components/models/AddReview"; // Import the modal component
 
 function BookReview() {
   const { bookId } = useParams();
   const { data } = useGetBookByIdQuery(bookId);
   const { data: bookreview } = useGetAllReviewsQuery(bookId);
+  const [openAddReview, setOpenAddReview] = useState(false);
 
   if (!data) {
     return <div>Loading...</div>;
   }
 
   const { imageURL, autherName, bookDiscription, bookTitle } = data.payload;
+
+  const handleAddReview = (reviewData) => {
+    console.log("New Review:", reviewData);
+    // Handle the review submission logic here (e.g., call an API to save the review)
+  };
 
   return (
     <div className="bookReview-main">
@@ -43,7 +50,10 @@ function BookReview() {
             <div className="bookReviews-review">
               <div className="bookReviews-review-title">
                 <h1>Review</h1>
-                <button className="rate-button">
+                <button
+                  className="rate-button"
+                  onClick={() => setOpenAddReview(true)}
+                >
                   <span className="material-symbols-outlined">star</span> Rate
                 </button>
               </div>
@@ -74,6 +84,13 @@ function BookReview() {
           </div>
         </div>
       </div>
+
+      {/* AddReview Modal */}
+      <AddReview
+        open={openAddReview}
+        handleClose={() => setOpenAddReview(false)}
+        onSubmit={handleAddReview}
+      />
     </div>
   );
 }
