@@ -1,9 +1,12 @@
 import React from "react";
 import "../../assets/css/LatestBooks.css";
-import bookImg from "../../assets/images/image.png";
+import { useGetAllBooksQuery } from "../../store/api/booksApi";
 import Rating from "@mui/material/Rating";
 
 function LatestBooks() {
+  const { data } = useGetAllBooksQuery();
+  console.log(data?.payload);
+
   return (
     <div className="LatestBooks-main">
       <div className="LatestBooks-top">
@@ -11,25 +14,36 @@ function LatestBooks() {
         <p>View All</p>
       </div>
       <div className="LatestBooks-grid">
-        {[...Array(10)].map((_, index) => (
-          <div key={index} className="LatestBooks-card">
-            <div className="LatestBooks-card-top">
-              <img src={bookImg} alt="bookimg" />
-            </div>
-            <div className="LatestBooks-card-btm">
-              <h1>Book Title {index + 1}</h1>
-              <Rating name="half-rating" defaultValue={4.5} precision={0.5} />
-              <div className="LatestBooks-card-footer">
-                <img
-                  src="https://via.placeholder.com/30"
-                  alt="User Avatar"
-                  className="LatestBooks-avatar"
+        {data?.payload && data.payload.length > 0 ? (
+          data.payload.map((book, index) => (
+            <div key={book.id} className="LatestBooks-card">
+              <div className="LatestBooks-card-top">
+                <img src={book.imageURL || bookImg} alt="bookimg" />
+              </div>
+              <div className="LatestBooks-card-btm">
+                <h1>{book.bookTitle}</h1>
+                <Rating
+                  name="book-rating"
+                  defaultValue={4.5}
+                  precision={0.5}
+                  size="small"
+                  sx={{
+                    "& .MuiRating-iconFilled": { color: "#B4D51E" },
+                  }}
+                  readOnly
                 />
-                <p>John Doe • {5 * (index + 1)} days ago</p>
+                <p>{book.bookDiscription}</p>
+                <div className="LatestBooks-card-footer">
+                  <p>
+                    {book.autherName} 
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>No books available</p>
+        )}
       </div>
     </div>
   );
