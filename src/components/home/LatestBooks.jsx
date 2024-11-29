@@ -31,7 +31,7 @@ function LatestBooks() {
               </div>
               <div className="LatestBooks-card-btm">
                 <h1>{book.bookTitle}</h1>
-                <Rating
+                {/* <Rating
                   name="book-rating"
                   defaultValue={4.5}
                   precision={0.5}
@@ -40,7 +40,7 @@ function LatestBooks() {
                     "& .MuiRating-iconFilled": { color: "#B4D51E" },
                   }}
                   readOnly
-                />
+                /> */}
                 <p>{book.bookDiscription}</p>
                 <div className="LatestBooks-card-footer">
                   <p>{book.autherName}</p>

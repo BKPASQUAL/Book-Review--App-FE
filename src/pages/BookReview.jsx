@@ -14,7 +14,7 @@ function BookReview() {
   const navigate = useNavigate();
   const { data } = useGetBookByIdQuery(bookId);
   const { data: bookreview, refetch } = useGetAllReviewsQuery(bookId);
-  const { data: averageRatingData } = useGetAverageRatingQuery(bookId);
+  const { data: averageRatingData , refetch : refetchAvg} = useGetAverageRatingQuery(bookId);
   console.log(averageRatingData)
   const [deleteReview] = useDeleteReviewMutation();
   const signedUserId = localStorage.getItem("userId");
@@ -64,6 +64,7 @@ function BookReview() {
             icon: "success",
           });
           refetch();
+          refetchAvg();
         } catch (error) {
           console.error("Failed to delete review:", error);
           Swal.fire({

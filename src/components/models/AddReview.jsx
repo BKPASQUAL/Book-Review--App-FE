@@ -13,7 +13,7 @@ import {
   useAddReviewMutation,
   useEditReviewMutation,
 } from "../../store/api/bookReviewApi";
-import { useGetAllReviewsQuery } from "../../store/api/reviewApi";
+import { useGetAllReviewsQuery, useGetAverageRatingQuery } from "../../store/api/reviewApi";
 
 function AddReview({ open, handleClose, bookId, reviewToEdit, onReviewAdded }) {
   const [rating, setRating] = useState(0);
@@ -21,6 +21,7 @@ function AddReview({ open, handleClose, bookId, reviewToEdit, onReviewAdded }) {
   const [addReview, { isLoading: isAdding }] = useAddReviewMutation();
   const [editReview, { isLoading: isEditing }] = useEditReviewMutation();
   const {  refetch } = useGetAllReviewsQuery(bookId);
+  const { refetch : refetchAvg} = useGetAverageRatingQuery(bookId);
 
 
   useEffect(() => {
@@ -63,6 +64,7 @@ function AddReview({ open, handleClose, bookId, reviewToEdit, onReviewAdded }) {
       }
   
       await refetch();
+      await refetchAvg();
   
       onReviewAdded(response);
   
